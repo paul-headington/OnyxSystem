@@ -5,7 +5,7 @@ namespace OnyxSystem\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use System\Service;
+use OnyxSystem\Service;
 use Zend\Session\Container;
 
 class SystemController extends AbstractActionController
