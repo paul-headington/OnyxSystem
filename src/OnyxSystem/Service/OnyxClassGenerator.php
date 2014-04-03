@@ -30,7 +30,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace System\Service;
+namespace OnyxSystem\Service;
 
 use Zend\Code\Generator\ClassGenerator;
 

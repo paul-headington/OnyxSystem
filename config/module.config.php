@@ -2,7 +2,7 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'System\Controller\System' => 'System\Controller\SystemController',
+            'OnyxSystem\Controller\System' => 'OnyxSystem\Controller\SystemController',
         ),
     ),
     // The following section is new and should be added to your file
@@ -17,7 +17,7 @@ return array(
                         'id'     => '[0-9]+',
                     ),
                     'defaults' => array(
-                        'controller' => 'System\Controller\System',
+                        'controller' => 'OnyxSystem\Controller\System',
                         'action'     => 'index',
                     ),
                 ),
@@ -43,7 +43,7 @@ return array(
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'system' => __DIR__ . '/../view',
+            'onyxsystem' => __DIR__ . '/../view',
         ),
     ),
 );

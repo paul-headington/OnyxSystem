@@ -37,7 +37,7 @@
  */
 
 
-namespace System\Service;
+namespace OnyxSystem\Service;
 
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\PropertyGenerator;
