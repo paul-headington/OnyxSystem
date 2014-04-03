@@ -1,4 +1,4 @@
-GetSet
+Onyx System
 ======
 
-GetSet
+A system for generating Onyx Model code.
