@@ -5,9 +5,18 @@
 	"require": {
 		"php": ">=5.4.0"
 	},
+    "authors": [
+        {
+            "name": "Paul Headington",
+            "email": "paul.headington@gmail.com"
+        }
+    ],
     "autoload": {
         "psr-0" : {
             "System": "src/"
-        }
+        },
+        "classmap": [
+            "./Module.php"
+        ]
     }
 }
