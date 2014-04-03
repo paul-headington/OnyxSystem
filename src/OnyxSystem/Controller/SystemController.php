@@ -1,7 +1,7 @@
 <?php
 
 
-namespace System\Controller;
+namespace OnyxSystem\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;

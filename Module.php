@@ -1,5 +1,5 @@
 <?php
-namespace System;
+namespace OnyxSystem;
 
 class Module
 {
