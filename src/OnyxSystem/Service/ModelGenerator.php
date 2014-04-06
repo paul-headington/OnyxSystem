@@ -43,6 +43,7 @@ use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\PropertyGenerator;
 use Zend\Code\Generator\MethodGenerator;
 use Zend\Session\Container;
+use OnyxSystem\Form;
 
 define('PHP_TAB', "\t");
 
@@ -88,38 +89,14 @@ class ModelGenerator {
         }
         $this->moduleName = $container->moduleName;
     }
-
-/*
-    private function makeGetter($name){
-        $name = strtolower($name);
-        return array(
-                'name' => 'get'.ucfirst($name),
-                'body' => 'return $this->_'.$name.';',
-            );
+    
+    public function createForm($table){
+        // need to remove underline first, ucwords, and then remove space
+        $classname = str_replace(' ', '', ucwords(str_replace('_', ' ', $table)));
+        $generator = $this->loadBaseFromClass('CreateModel');
+        \Zend\Debug\Debug::dump($generator);
+        exit();
     }
-
-    private function makeSetter($name, $type){
-        $name = strtolower($name);
-        switch ($type){
-            case "string":
-                $body = '$'.$name.' = $this->filter->filter($'.$name.');'.PHP_EOL.'$this->_'.$name.' = (string) $'.$name.';'.PHP_EOL.'return $this;';
-                break;
-            case "int":
-                $body = '$this->_'.$name.' = (int) $'.$name.';'.PHP_EOL.'return $this;';
-                break;
-            default:
-                $body = '$this->_'.$name.' = $'.$name.';'.PHP_EOL.'return $this;';
-                break;
-        }
-
-        return array(
-                'name' => 'set'.ucfirst($name),
-                'parameters' => array(array('name' => $name)),
-                'body' => $body,
-            );
-    }
- * 
- */
 
     public function createModel($table){
 
@@ -434,6 +411,13 @@ class ModelGenerator {
             throw new \Exception("Could not find create file: ".$path.'/'.$filename.'.php');            
         }
         
+    }
+    
+    private function loadBaseFromClass($class){
+        $generator = Zend_CodeGenerator_Php_Class::fromReflection(
+            new Zend_Reflection_Class($class)
+        );
+        return $generator;
     }
 
 
