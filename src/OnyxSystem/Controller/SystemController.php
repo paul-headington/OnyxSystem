@@ -68,6 +68,19 @@ class SystemController extends AbstractActionController
         
     }
     
+    public function createFormAction(){
+        $sm = $this->getServiceLocator();
+        $modelGen = new Service\ModelGenerator($sm);
+        $table = $this->params('table');
+        if($modelGen->createForm($table)){
+            $this->flashMessenger()->addMessage('Model files created successfully');            
+        }else{
+            $this->flashMessenger()->addMessage('Error creating model files');
+        }
+        exit();
+        //return $this->redirect()->toRoute('system');
+    }
+
     private function checkExists($tableName){
         $basepath = realpath($_SERVER['DOCUMENT_ROOT'] . '/../');
         $path = $basepath.'/module/'.$this->moduleName.'/src/'.$this->moduleName.'/Model';
