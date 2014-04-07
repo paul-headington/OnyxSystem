@@ -43,6 +43,7 @@ use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\PropertyGenerator;
 use Zend\Code\Generator\MethodGenerator;
 use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Reflection\ClassReflection;
 use Zend\Session\Container;
 use OnyxSystem\Form;
 
@@ -416,7 +417,7 @@ class ModelGenerator {
     
     private function loadBaseFromClass($class){
         $generator = ClassGenerator::fromReflection(
-            new Zend_Reflection_Class($class)
+            new ClassReflection($class)
         );
         return $generator;
     }
