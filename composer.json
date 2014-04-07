@@ -11,6 +11,11 @@
             "email": "paul.headington@gmail.com"
         }
     ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "2.3.*",
+        "paul-headington/GetSet": "dev-master"
+    },
     "autoload": {
         "psr-0" : {
             "System": "src/"

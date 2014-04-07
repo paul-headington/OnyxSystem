@@ -415,7 +415,7 @@ class ModelGenerator {
     }
     
     private function loadBaseFromClass($class){
-        $generator = CodeGenerator::fromReflection(
+        $generator = ClassGenerator::fromReflection(
             new Zend_Reflection_Class($class)
         );
         return $generator;
