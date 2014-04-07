@@ -9,32 +9,59 @@ return array(
     'router' => array(
         'routes' => array(
             'system' => array(
-                'type'    => 'segment',
+                'type'    => 'Literal',
                 'options' => array(
-                    'route'    => '/system[/:action][/:id]',
-                    'constraints' => array(
-                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                        'id'     => '[0-9]+',
-                    ),
+                    'route'    => '/',
                     'defaults' => array(
-                        'controller' => 'OnyxSystem\Controller\System',
-                        'action'     => 'index',
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'index',
                     ),
                 ),
                 'may_terminate' => true,
                 'child_routes' => array(
-                    'createmodel' => array(
-                        'type'    => 'segment',
+                    'default' => array(
+                        'type'    => 'Segment',
                         'options' => array(
-                            'route'    => '[/:table]',
+                            'route'    => '[:controller[/:action][/:id]]',
                             'constraints' => array(
-                                'table' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id'         => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
-                                'action'     => 'createModel',
-                                'table'      => null
                             ),
                         ),
+                    ),
+                ),
+            ),
+            'createmodel' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/system/create-model[/:table]',
+                    'constraints' => array(
+                        'table' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'createModel',
+                        'table'         => null
+                    ),
+                ),
+            ),
+            'createform' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/system/create-form[/:table]',
+                    'constraints' => array(
+                        'table' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'createForm',
+                        'table'         => null
                     ),
                 ),
             ),

@@ -71,7 +71,7 @@ class SystemController extends AbstractActionController
     public function createFormAction(){
         $sm = $this->getServiceLocator();
         $modelGen = new Service\ModelGenerator($sm);
-        $table = $this->params('table');
+        $table = $this->params('table');        
         if($modelGen->createForm($table)){
             $this->flashMessenger()->addMessage('Model files created successfully');            
         }else{
