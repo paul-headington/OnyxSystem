@@ -99,14 +99,20 @@ class ModelGenerator {
         
         $generator = $this->loadBaseFromClass($formModelTemplate);
         $generator->setName($classname);
-        
+        $generator->setNamespaceName($modelName . '\Form');
         $constuct = $generator->getMethod('__construct');
         $body = $constuct->getBody();
-        $bodyNew = str_replace("{Model}", $modelName, $body);
-        $constuct->setBody($bodyNew);
+        $body = str_replace("{Model}", $modelName, $body);
+        $body = str_replace("{Module}", $this->moduleName, $body);
+        $constuct->setBody($body);
+        $class_code = $class->generate();
+         try{
+            $this->saveFile($class_code, $classname, $this->moduleName, 'Form');
+        }catch(Exception $e){
+            return false;
+        }
         
-        
-        \Zend\Debug\Debug::dump($generator);
+        \Zend\Debug\Debug::dump($class_code);
         exit();
     }
 
@@ -404,10 +410,10 @@ class ModelGenerator {
         return true;
     }
     
-    private function saveFile($code, $filename, $moduleName){
+    private function saveFile($code, $filename, $moduleName, $type = 'Model'){
         try{ 
             $basepath = realpath($_SERVER['DOCUMENT_ROOT'] . '/../');
-            $path = $basepath.'/module/'.$moduleName.'/src/'.$moduleName.'/Model';
+            $path = $basepath . '/module/' . $moduleName . '/src/' . $moduleName . '/' . $type;
 
             if(!is_dir($path)){
                 mkdir($path, 0775);
@@ -417,10 +423,10 @@ class ModelGenerator {
             
             $result = file_put_contents($path.'/'.$filename.'.php', "<?php" . PHP_EOL . $code . PHP_EOL . "?>");
             if($result === false){
-                throw new \Exception("Could not find create file: ".$path.'/'.$filename.'.php');            
+                throw new \Exception("Could not find create file: " . $path . '/' . $filename . '.php');            
             }
         }  catch (Exception $e){
-            throw new \Exception("Could not find create file: ".$path.'/'.$filename.'.php');            
+            throw new \Exception("Could not find create file: " . $path . '/' . $filename . '.php');            
         }
         
     }
