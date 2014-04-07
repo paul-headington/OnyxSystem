@@ -42,10 +42,9 @@ namespace OnyxSystem\Service;
 use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\PropertyGenerator;
 use Zend\Code\Generator\MethodGenerator;
-use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Reflection\ClassReflection;
 use Zend\Session\Container;
-use OnyxSystem\Form;
+use OnyxSystem\Form\ModelForm;
 
 define('PHP_TAB', "\t");
 
@@ -94,8 +93,19 @@ class ModelGenerator {
     
     public function createForm($table){
         // need to remove underline first, ucwords, and then remove space
-        $classname = str_replace(' ', '', ucwords(str_replace('_', ' ', $table)));
-        $generator = $this->loadBaseFromClass('CreateModel');
+        $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $table)));
+        $classname = $modelName . "Form";
+        $formModelTemplate = new ModelForm();
+        
+        $generator = $this->loadBaseFromClass($formModelTemplate);
+        $generator->setName($classname);
+        
+        $constuct = $generator->getMethod('__construct');
+        $body = $constuct->getBody();
+        $bodyNew = str_replace("{Model}", $modelName, $body);
+        $constuct->setBody($bodyNew);
+        
+        
         \Zend\Debug\Debug::dump($generator);
         exit();
     }
@@ -416,7 +426,7 @@ class ModelGenerator {
     }
     
     private function loadBaseFromClass($class){
-        $generator = ClassGenerator::fromReflection(
+        $generator = OnyxClassGenerator::fromReflection(
             new ClassReflection($class)
         );
         return $generator;

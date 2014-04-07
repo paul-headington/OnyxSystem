@@ -42,11 +42,11 @@ use ZfcBase\Form\ProvidesEventsForm;
 use Zend\InputFilter\InputFilter;
 use Zend\Stdlib\Hydrator\ObjectProperty as ObjectPropertyHydrator;
 
-class CreateModel extends ProvidesEventsForm
+class ModelForm extends ProvidesEventsForm
 {
     public function __construct()
     {
-        parent::__construct('User');
+        parent::__construct('{Model}');
 
         $this->setAttribute('method', 'post')
              ->setHydrator(new ObjectPropertyHydrator(false))
