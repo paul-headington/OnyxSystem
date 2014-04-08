@@ -95,7 +95,8 @@ class ModelGenerator {
         // need to remove underline first, ucwords, and then remove space
         $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $table)));
         $classname = $modelName . "Form";
-        $formModelTemplate = new ModelForm();
+        
+        $formModelTemplate = '../Templates/ModelForm.php' .
         
         $generator = $this->loadBaseFromClass($formModelTemplate);
         $generator->setName($classname);
@@ -432,10 +433,8 @@ class ModelGenerator {
         
     }
     
-    private function loadBaseFromClass($class){
-        $generator = OnyxClassGenerator::fromReflection(
-            new ClassReflection($class)
-        );
+    private function loadBaseFromFile($file){        
+        $generator = Zend\Code\Generator\FileGenerator::fromReflectedFileName($file);
         return $generator;
     }
 

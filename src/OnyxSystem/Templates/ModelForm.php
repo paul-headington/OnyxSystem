@@ -31,68 +31,44 @@
  */
 
 /**
- * Description of UserFieldset
+ * Description of CreateModel
  *
  * @author paulh
  */
+
 namespace OnyxSystem\Form;
 
-//use User\Model\User;
-use Zend\Form\Fieldset;
-use Zend\InputFilter\InputFilterProviderInterface;
+use ZfcBase\Form\ProvidesEventsForm;
+use Zend\InputFilter\InputFilter;
 use Zend\Stdlib\Hydrator\ObjectProperty as ObjectPropertyHydrator;
 
-class UserFieldset extends Fieldset implements InputFilterProviderInterface {
-    
+class ModelForm extends ProvidesEventsForm
+{
     public function __construct()
     {
-        parent::__construct('User');
-        $this->setHydrator(new ObjectPropertyHydrator(false))
-             ->setObject(new User());
-        $this->setLabel('User');
-        $this->add(array(
-            'name' => 'firstname',
-            'options' => array(
-                'label' => 'First Name'
-            ),
-            'attributes' => array(
-                'required' => 'required'
-            )
-        ));
+        parent::__construct('{Model}');
 
+        $this->setAttribute('method', 'post')
+             ->setHydrator(new ObjectPropertyHydrator(false))
+             ->setInputFilter(new InputFilter());
         $this->add(array(
-            'name' => 'lastname',
+            'type' => 'OnyxSystem\Form\ModelFieldset',
             'options' => array(
-                'label' => 'Last Name'
-            ),
-            'attributes' => array(
-                'required' => 'required'
+                'use_as_base_fieldset' => true
             )
         ));
-        
         $this->add(array(
-            'name' => 'email',
-            'type' => 'Zend\Form\Element\Email',
-            'options' => array(
-                'label' => 'Email Address'
-            ),
+            'type' => 'Zend\Form\Element\Csrf',
+            'name' => 'csrf'
+        ));
+        $this->add(array(
+            'name' => 'submit',
             'attributes' => array(
-                'required' => 'required'
+                'type' => 'submit',
+                'value' => 'Send'
             )
         ));
-        
-        
     }
-    
-     /**
-     * @return array
-     */
-    public function getInputFilterSpecification()
-    {
-        $user = $this->getObject();
-        return $user->getValidation();
-    }
-    
 }
 
 ?>
