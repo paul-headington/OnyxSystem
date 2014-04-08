@@ -103,9 +103,10 @@ class ModelGenerator {
         $constuct = $generator->getMethod('__construct');
         $body = $constuct->getBody();
         $body = str_replace("{Model}", $modelName, $body);
-        $body = str_replace("{Module}", $this->moduleName, $body);
+        $body = str_replace("Model", $modelName, $body);
+        $body = str_replace("OnyxSystem", $this->moduleName, $body);
         $constuct->setBody($body);
-        $class_code = $class->generate();
+        $class_code = $generator->generate();
          try{
             $this->saveFile($class_code, $classname, $this->moduleName, 'Form');
         }catch(Exception $e){

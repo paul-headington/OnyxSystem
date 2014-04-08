@@ -52,7 +52,7 @@ class ModelForm extends ProvidesEventsForm
              ->setHydrator(new ObjectPropertyHydrator(false))
              ->setInputFilter(new InputFilter());
         $this->add(array(
-            'type' => '{Module}\Form\{Model}Fieldset',
+            'type' => 'OnyxSystem\Form\ModelFieldset',
             'options' => array(
                 'use_as_base_fieldset' => true
             )
