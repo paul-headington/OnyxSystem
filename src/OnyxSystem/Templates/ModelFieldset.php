@@ -31,44 +31,36 @@
  */
 
 /**
- * Description of CreateModel
+ * Description of UserFieldset
  *
  * @author paulh
  */
-
 namespace OnyxSystem\Form;
 
-use ZfcBase\Form\ProvidesEventsForm;
-use Zend\InputFilter\InputFilter;
+use Zend\Form\Fieldset;
+use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Stdlib\Hydrator\ObjectProperty as ObjectPropertyHydrator;
 
-class ModelForm extends ProvidesEventsForm
-{
+class {Model}Fieldset extends Fieldset implements InputFilterProviderInterface {
+    
     public function __construct()
     {
         parent::__construct('{Model}');
-
-        $this->setAttribute('method', 'post')
-             ->setHydrator(new ObjectPropertyHydrator(false))
-             ->setInputFilter(new InputFilter());
-        $this->add(array(
-            'type' => 'OnyxSystem\Form\ModelFieldset',
-            'options' => array(
-                'use_as_base_fieldset' => true
-            )
-        ));
-        $this->add(array(
-            'type' => 'Zend\Form\Element\Csrf',
-            'name' => 'csrf'
-        ));
-        $this->add(array(
-            'name' => 'submit',
-            'attributes' => array(
-                'type' => 'submit',
-                'value' => 'Send'
-            )
-        ));
+        $this->setHydrator(new ObjectPropertyHydrator(false))
+             ->setObject(new {Model}());
+        $this->setLabel('{Model}');        
+        
     }
+    
+     /**
+     * @return array
+     */
+    public function getInputFilterSpecification()
+    {
+        $model = $this->getObject();
+        return $model->getValidation();
+    }
+    
 }
 
 ?>

@@ -43,6 +43,7 @@ use Zend\Code\Generator\DocBlockGenerator;
 use Zend\Code\Generator\PropertyGenerator;
 use Zend\Code\Generator\MethodGenerator;
 use Zend\Code\Reflection\ClassReflection;
+use Zend\Code\Generator\FileGenerator;
 use Zend\Session\Container;
 use OnyxSystem\Form\ModelForm;
 
@@ -96,26 +97,61 @@ class ModelGenerator {
         $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $table)));
         $classname = $modelName . "Form";
         
-        $formModelTemplate = '../Templates/ModelForm.php' .
+        $basepath = realpath($_SERVER['DOCUMENT_ROOT'] . '/../');
+        $formModelTemplate = $basepath . '/vendor/paul-headington/OnyxSystem/src/OnyxSystem/Templates/ModelForm.php';
         
-        $generator = $this->loadBaseFromFile($formModelTemplate);
-        $generator->setName($classname);
-        $generator->setNamespaceName($modelName . '\Form');
-        $constuct = $generator->getMethod('__construct');
+        $generator = $this->loadBaseFromFile($formModelTemplate);        
+        $class = $generator->getClass();        
+        $class->setName($classname);
+        $class->setNamespaceName($modelName . '\Form');
+        $constuct = $class->getMethod('__construct');
         $body = $constuct->getBody();
         $body = str_replace("{Model}", $modelName, $body);
         $body = str_replace("Model", $modelName, $body);
         $body = str_replace("OnyxSystem", $this->moduleName, $body);
         $constuct->setBody($body);
-        $class_code = $generator->generate();
+        $class_code = $class->generate();
+         try{
+            $this->saveFile($class_code, $classname, $this->moduleName, 'Form');
+        }catch(Exception $e){
+            return false;
+        }
+        // now to generate the fieldset
+        
+        $classname = $modelName . "Fieldset";
+        
+        $fieldsetModelTemplate = $basepath . '/vendor/paul-headington/OnyxSystem/src/OnyxSystem/Templates/ModelFieldset.php';
+        
+        $generator = $this->loadBaseFromFile($fieldsetModelTemplate);        
+        $class = $generator->getClass();        
+        $class->setName($classname);
+        $class->setNamespaceName($modelName . '\Form');
+        $class->addUse($this->moduleName . "\Model\\" . $modelName);
+        $constuct = $class->getMethod('__construct');
+        $body = $constuct->getBody();
+        $body = str_replace("{Model}", $modelName, $body);
+        
+        //        $this->add(array(
+//            'name' => 'firstname',
+//            'options' => array(
+//                'label' => 'First Name'
+//            ),
+//            'attributes' => array(
+//                'required' => 'required'
+//            )
+//        ));
+        
+        
+        $constuct->setBody($body);
+        $class_code = $class->generate();
          try{
             $this->saveFile($class_code, $classname, $this->moduleName, 'Form');
         }catch(Exception $e){
             return false;
         }
         
-        \Zend\Debug\Debug::dump($class_code);
-        exit();
+        
+        return true;
     }
 
     public function createModel($table){
@@ -434,7 +470,7 @@ class ModelGenerator {
     }
     
     private function loadBaseFromFile($file){        
-        $generator = Zend\Code\Generator\FileGenerator::fromReflectedFileName($file);
+        $generator = FileGenerator::fromReflectedFileName($file);
         return $generator;
     }
     
