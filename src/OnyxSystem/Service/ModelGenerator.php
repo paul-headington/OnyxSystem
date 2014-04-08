@@ -98,7 +98,7 @@ class ModelGenerator {
         
         $formModelTemplate = '../Templates/ModelForm.php' .
         
-        $generator = $this->loadBaseFromClass($formModelTemplate);
+        $generator = $this->loadBaseFromFile($formModelTemplate);
         $generator->setName($classname);
         $generator->setNamespaceName($modelName . '\Form');
         $constuct = $generator->getMethod('__construct');
@@ -435,6 +435,13 @@ class ModelGenerator {
     
     private function loadBaseFromFile($file){        
         $generator = Zend\Code\Generator\FileGenerator::fromReflectedFileName($file);
+        return $generator;
+    }
+    
+    private function loadBaseFromClass($class){
+        $generator = OnyxClassGenerator::fromReflection(
+            new ClassReflection($class)
+        );
         return $generator;
     }
 
