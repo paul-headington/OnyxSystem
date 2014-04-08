@@ -73,12 +73,11 @@ class SystemController extends AbstractActionController
         $modelGen = new Service\ModelGenerator($sm);
         $table = $this->params('table');        
         if($modelGen->createForm($table)){
-            $this->flashMessenger()->addMessage('Model files created successfully');            
+            $this->flashMessenger()->addMessage('Form files created successfully');            
         }else{
-            $this->flashMessenger()->addMessage('Error creating model files');
+            $this->flashMessenger()->addMessage('Error creating form files');
         }
-        exit();
-        //return $this->redirect()->toRoute('system');
+        return $this->redirect()->toRoute('system');
     }
 
     private function checkExists($tableName){

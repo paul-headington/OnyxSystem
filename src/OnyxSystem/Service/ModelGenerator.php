@@ -98,7 +98,7 @@ class ModelGenerator {
         $classname = $modelName . "Form";
         
         $basepath = realpath($_SERVER['DOCUMENT_ROOT'] . '/../');
-        $formModelTemplate = $basepath . '/vendor/paul-headington/OnyxSystem/src/OnyxSystem/Templates/ModelForm.php';
+        $formModelTemplate = $basepath . '/vendor/paul-headington/OnyxSystem/src/OnyxSystem/Templates/ModelForm.tmp';
         
         $generator = $this->loadBaseFromFile($formModelTemplate);        
         $class = $generator->getClass();        
@@ -120,27 +120,70 @@ class ModelGenerator {
         
         $classname = $modelName . "Fieldset";
         
-        $fieldsetModelTemplate = $basepath . '/vendor/paul-headington/OnyxSystem/src/OnyxSystem/Templates/ModelFieldset.php';
+        $fieldsetModelTemplate = $basepath . '/vendor/paul-headington/OnyxSystem/src/OnyxSystem/Templates/ModelFieldset.tmp';
         
         $generator = $this->loadBaseFromFile($fieldsetModelTemplate);        
-        $class = $generator->getClass();        
+        $class = $generator->getClass();   
         $class->setName($classname);
         $class->setNamespaceName($modelName . '\Form');
         $class->addUse($this->moduleName . "\Model\\" . $modelName);
         $constuct = $class->getMethod('__construct');
         $body = $constuct->getBody();
-        $body = str_replace("{Model}", $modelName, $body);
-        
-        //        $this->add(array(
-//            'name' => 'firstname',
-//            'options' => array(
-//                'label' => 'First Name'
-//            ),
-//            'attributes' => array(
-//                'required' => 'required'
-//            )
-//        ));
-        
+        $body = str_replace("Model", $modelName, $body);
+        // get all fields
+        $metadata = new \Zend\Db\Metadata\Metadata($this->dbAdapter);
+        $fields = $metadata->getColumns($table);
+       
+
+        foreach($fields as $field)
+        {
+            $name = $field->getName();
+            $label = $this->spacify($name);
+            switch ($name){
+                case "email":
+                case "emailAddress":
+                    $type = 'Zend\Form\Element\Email';
+                    break;
+                case "id":
+                    $type = 'Zend\Form\Element\Hidden';
+                    break;
+                default:
+                    $type = 'Zend\Form\Element\Text';
+                    break;
+            }
+            
+            switch($field->getDataType()){
+                case "int":
+                case "varchar":
+                    break;
+                case "text":
+                case "blob":
+                    $type = 'Zend\Form\Element\Textarea';
+                    break;
+                case "enum":
+                    $type = 'Zend\Form\Element\Select';
+                    break;
+                case "boolean":
+                case "tinyint":
+                    $type = 'Zend\Form\Element\Checkbox';
+                    break;
+                default:
+                    break;
+            }
+            
+            $body .= "
+    \$this->add(array(
+        'name' => '$name',
+        'type' => '$type',
+        'options' => array(
+            'label' => '$label'
+        ),
+        'attributes' => array(
+            'required' => 'required'
+        )
+    ));" . PHP_EOL . PHP_EOL;
+        }
+       
         
         $constuct->setBody($body);
         $class_code = $class->generate();

@@ -41,14 +41,14 @@ use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
 use Zend\Stdlib\Hydrator\ObjectProperty as ObjectPropertyHydrator;
 
-class {Model}Fieldset extends Fieldset implements InputFilterProviderInterface {
+class ModelFieldset extends Fieldset implements InputFilterProviderInterface {
     
     public function __construct()
     {
-        parent::__construct('{Model}');
+        parent::__construct('Model');
         $this->setHydrator(new ObjectPropertyHydrator(false))
-             ->setObject(new {Model}());
-        $this->setLabel('{Model}');        
+             ->setObject(new Model());
+        $this->setLabel('Model');        
         
     }
     
