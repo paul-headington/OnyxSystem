@@ -361,6 +361,18 @@ class ModelGenerator {
                 )),
             )),            
         );
+        
+        if($classname == 'User'){
+            $columns[] = array(
+                'name' => 'staticSalt',
+                'defaultValue' => null,
+                'visibility' => PropertyGenerator::FLAG_PRIVATE,            
+            );
+            $userMethods = $this->returnUserMethods();
+            foreach($userMethods as $method){
+                $methods_class[] = MethodGenerator::fromArray($method);
+            }
+        }
 
 
 
@@ -469,6 +481,8 @@ class ModelGenerator {
                 )),
             )),
         );
+        
+        
 
 
         // create table class file
@@ -512,6 +526,45 @@ class ModelGenerator {
         
     }
     
+    
+    private function returnUserMethods(){
+        $output = array();
+        
+        $output[] = array(
+                'name'       => 'setPassword',
+                'parameters' => array('password'),
+                'body'       => 'if($password != $this->_password){'.PHP_EOL.'if($this->staticSalt == null){'.PHP_EOL.'throw new \Exception("No static salt set, please inital model via service manager");'.PHP_EOL.'}'.PHP_EOL.'if($this->_salt == null){'.PHP_EOL.'$this->_salt = \OnyxSystem\DataFunctions::getSalt();'.PHP_EOL.'}'.PHP_EOL.'$passwordHash = sha1($this->_salt . $password . $this->staticSalt);'.PHP_EOL.'$this->_password = $passwordHash;'.PHP_EOL.'}',
+                'docblock'   => DocBlockGenerator::fromArray(array(
+                    'shortDescription' => 'Set the password value as a salted hash',
+                    'longDescription'  => null,
+                    'tags'             => array(
+                            array(
+                                'name' => 'password',
+                                'description' => "raw password string",
+                            ),
+                    ),
+                )),
+            );
+        
+        $output[] = array(
+                'name'       => 'setStaticSalt',
+                'parameters' => array('salt'),
+                'body'       => '$this->staticSalt = $salt;',
+                'docblock'   => DocBlockGenerator::fromArray(array(
+                    'shortDescription' => 'Set the sites static salt for password hashing',
+                    'longDescription'  => null,
+                    'tags'             => array(
+                            array(
+                                'name' => 'salt',
+                                'description' => "static site salt",
+                            ),
+                    ),
+                )),
+            );
+        return $output;
+    }
+
+
     private function loadBaseFromFile($file){        
         $generator = FileGenerator::fromReflectedFileName($file);
         return $generator;
