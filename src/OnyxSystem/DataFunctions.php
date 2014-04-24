@@ -73,6 +73,15 @@ class DataFunctions {
         return json_encode($formattedArr);
     }
     
+    static function objectToArray($obj){
+        $arrObj = is_object($obj) ? get_object_vars($obj) : $obj;
+        foreach ($arrObj as $key => $val) {
+                $val = (is_array($val) || is_object($val)) ? DataFunctions::object_to_array($val) : $val;
+                $arr[$key] = $val;
+        }
+        return $arr;
+    }
+    
     static function keygen($length=10)
     {
         $letters = array_merge(range('A','H'),range('K','N'),range('P','Z'));
