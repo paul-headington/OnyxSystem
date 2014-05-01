@@ -212,9 +212,6 @@ class ModelGenerator {
         // add to columns each field with a default value
         $columns = array();
 
-        // getters and setters in here
-        $getset = array();
-
         $required = array();
         
         // track primary field(s) for table
@@ -276,9 +273,9 @@ class ModelGenerator {
             }
             // if int field default to 0
             $columns[] = array(
-                'name' => '_'.$field->getName(),
+                'name' => $field->getName(),
                 'defaultValue' => $dvalue,
-                'visibility' => PropertyGenerator::FLAG_PROTECTED,                
+                'visibility' => PropertyGenerator::FLAG_PUBLIC,                
             );
 
             //$getset[] = $this->makeGetter($field->getName());
@@ -533,7 +530,7 @@ class ModelGenerator {
         $output[] = array(
                 'name'       => 'setPassword',
                 'parameters' => array('password'),
-                'body'       => 'if($password != $this->_password){'.PHP_EOL.'if($this->staticSalt == null){'.PHP_EOL.'throw new \Exception("No static salt set, please inital model via service manager");'.PHP_EOL.'}'.PHP_EOL.'if($this->_salt == null){'.PHP_EOL.'$this->_salt = \OnyxSystem\DataFunctions::getSalt();'.PHP_EOL.'}'.PHP_EOL.'$passwordHash = sha1($this->_salt . $password . $this->staticSalt);'.PHP_EOL.'$this->_password = $passwordHash;'.PHP_EOL.'}',
+                'body'       => 'if($password != $this->password){'.PHP_EOL.'if($this->staticSalt == null){'.PHP_EOL.'throw new \Exception("No static salt set, please inital model via service manager");'.PHP_EOL.'}'.PHP_EOL.'if($this->salt == null){'.PHP_EOL.'$this->salt = \OnyxSystem\DataFunctions::getSalt();'.PHP_EOL.'}'.PHP_EOL.'$passwordHash = sha1($this->salt . $password . $this->staticSalt);'.PHP_EOL.'$this->password = $passwordHash;'.PHP_EOL.'}',
                 'docblock'   => DocBlockGenerator::fromArray(array(
                     'shortDescription' => 'Set the password value as a salted hash',
                     'longDescription'  => null,
@@ -545,6 +542,18 @@ class ModelGenerator {
                     ),
                 )),
             );
+        
+        $output[] = array(
+                'name'       => 'getArrayCopy',
+                'parameters' => array(),
+                'body'       => 'return get_object_vars($this);',
+                'docblock'   => DocBlockGenerator::fromArray(array(
+                    'shortDescription' => 'get all object vars for hydrator',
+                    'longDescription'  => null,
+                    'tags'             => array(),
+                )),
+            );
+        
         
         $output[] = array(
                 'name'       => 'setStaticSalt',
