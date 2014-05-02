@@ -286,7 +286,11 @@ class ModelGenerator {
             
            
             $fieldname = strtolower($field->getName());
-            $exchangebody .= '$this->' . $fieldname . PHP_TAB . PHP_TAB . '= (isset($data["'.$fieldname.'"])) ? $data["'.$fieldname.'"] : null;'.PHP_EOL;
+            if($fieldname == 'password'){
+                $exchangebody .= '$this->setPassword((isset($data["password"])) ? $data["password"] : null);';
+            }else{
+                $exchangebody .= '$this->' . $fieldname . PHP_TAB . PHP_TAB . '= (isset($data["'.$fieldname.'"])) ? $data["'.$fieldname.'"] : null;'.PHP_EOL;
+            }
             $saveBody .= PHP_TAB . '\'' . $fieldname . '\' => $'.strtolower($classname).'->' . $fieldname . ',' . PHP_EOL;
             
             
@@ -435,7 +439,7 @@ class ModelGenerator {
             MethodGenerator::fromArray(array(
                 'name'       => 'getById',
                 'parameters' => array('id'),
-                'body'       => '$id  = (int) $id;'.PHP_EOL.'$rowset = $this->tableGateway->select(array(\'id\' => $id));'.PHP_EOL.'$row = $rowset->current();'.PHP_EOL.'if (!$row) {'.PHP_EOL.PHP_TAB.'throw new \Exception("Could not find row $id");'.PHP_EOL.'}'.PHP_EOL.'return $row;',
+                'body'       => '$id  = (int) $id;'.PHP_EOL.'$rowset = $this->tableGateway->select(array(\'id\' => $id));'.PHP_EOL.'$row = $rowset->current();'.PHP_EOL.'if (!$row) {'.PHP_EOL.PHP_TAB.'return false;'.PHP_EOL.'}'.PHP_EOL.'return $row;',
                 'docblock'   => DocBlockGenerator::fromArray(array(
                     'shortDescription' => 'retrieve object by id',
                     'longDescription'  => null,
@@ -450,7 +454,7 @@ class ModelGenerator {
             MethodGenerator::fromArray(array(
                 'name'       => 'save',
                 'parameters' => array(new \Zend\Code\Generator\ParameterGenerator(strtolower($classname), $classname)),
-                'body'       => '$data = array('.PHP_EOL.$saveBody.PHP_EOL.');'.PHP_EOL.'$id = (int)$'.strtolower($classname).'->id;'.PHP_EOL.'if ($id == 0) {'.PHP_EOL.PHP_TAB.'$data[\'postdate\'] = date(\'d-m-Y H:i:s\');'.PHP_EOL.PHP_TAB.'$this->tableGateway->insert($data);'.PHP_EOL.'} else {'.PHP_EOL.PHP_TAB.'if ($this->getById($id)) {'.PHP_EOL.PHP_TAB.PHP_TAB.'$this->tableGateway->update($data, array(\'id\' => $id));'.PHP_EOL.PHP_TAB.'} else {'.PHP_EOL.PHP_TAB.PHP_TAB.'throw new \Exception(\''.$classname.' id does not exist\');'.PHP_EOL.PHP_TAB.'}'.PHP_EOL.'}',                
+                'body'       => '$data = array('.PHP_EOL.$saveBody.PHP_EOL.');'.PHP_EOL.'$id = (int)$'.strtolower($classname).'->id;'.PHP_EOL.'if ($id == 0) {'.PHP_EOL.PHP_TAB.'$data[\'postdate\'] = date(\'Y-m-d H:i:s\');'.PHP_EOL.PHP_TAB.'$this->tableGateway->insert($data);'.PHP_EOL.'} else {'.PHP_EOL.PHP_TAB.'if ($this->getById($id)) {'.PHP_EOL.PHP_TAB.PHP_TAB.'$this->tableGateway->update($data, array(\'id\' => $id));'.PHP_EOL.PHP_TAB.'} else {'.PHP_EOL.PHP_TAB.PHP_TAB.'throw new \Exception(\''.$classname.' id does not exist\');'.PHP_EOL.PHP_TAB.'}'.PHP_EOL.'}',                
                 'docblock'   => DocBlockGenerator::fromArray(array(
                     'shortDescription' => 'retrieve object by id',
                     'longDescription'  => null,
@@ -477,6 +481,21 @@ class ModelGenerator {
                     ),
                 )),
             )),
+            MethodGenerator::fromArray(array(
+                'name'       => 'updateLogin',
+                'parameters' => array('id'),
+                'body'       => '$data[\'logindate\'] = date(\'Y-m-d H:i:s\');'.PHP_EOL.'$this->tableGateway->update($data, array(\'id\' => $id));',                
+                'docblock'   => DocBlockGenerator::fromArray(array(
+                    'shortDescription' => 'update user login by id',
+                    'longDescription'  => null,
+                    'tags'             => array(
+                        array(
+                            'name' => 'id',
+                            'description' => 'The primary key of the object',
+                        ),
+                    ),
+                )),
+            )), 
         );
         
         

@@ -39,14 +39,14 @@ namespace OnyxSystem\Form;
 
 use Zend\Form\Fieldset;
 use Zend\InputFilter\InputFilterProviderInterface;
-use Zend\Stdlib\Hydrator\ObjectProperty as ObjectPropertyHydrator;
+use Zend\Stdlib\Hydrator\ArraySerializable as ArraySerializable;
 
 class ModelFieldset extends Fieldset implements InputFilterProviderInterface {
     
     public function __construct()
     {
         parent::__construct('Model');
-        $this->setHydrator(new ObjectPropertyHydrator(false))
+        $this->setHydrator(new ArraySerializable(false))
              ->setObject(new Model());
         $this->setLabel('Model');        
         
