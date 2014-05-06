@@ -29,7 +29,11 @@ class SystemController extends AbstractActionController
         $sm = $this->getServiceLocator();
         $config = $sm->get('config');
         $routes = array();
-         return new ViewModel(array('routes' => $routes));
+        foreach($config['router']['routes'] as $key => $data){
+            $routes[] = $key;
+        }
+        
+        return new ViewModel(array('routes' => $routes));
     }
     
     public function testAction(){

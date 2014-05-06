@@ -35,6 +35,17 @@ return array(
                     ),
                 ),
             ),
+            'acl' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/system/acl',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'acl',
+                    ),
+                ),
+            ),
             'createmodel' => array(
                 'type'    => 'Segment',
                 'options' => array(
