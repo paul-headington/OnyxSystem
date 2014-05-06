@@ -12,12 +12,24 @@ class SystemController extends AbstractActionController
 {
     private $moduleName;
     
+    public function onDispatch( \Zend\Mvc\MvcEvent $e ){
+        $this->layout('layout/onyxsystem');
+        return parent::onDispatch($e);
+    }
+    
     public function __construct(){
         $container = new Container('systemBuild');
         if($container->moduleName == NULL){
             $container->moduleName = 'Application';
             $this->moduleName = $container->moduleName;
         }
+    }
+    
+    public function aclAction(){
+        $sm = $this->getServiceLocator();
+        $config = $sm->get('config');
+        $routes = array();
+         return new ViewModel(array('routes' => $routes));
     }
     
     public function testAction(){
