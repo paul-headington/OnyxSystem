@@ -11,6 +11,7 @@ use Zend\Session\Container;
 class SystemController extends AbstractActionController
 {
     private $moduleName;
+    private $aclTable;
     
     public function onDispatch( \Zend\Mvc\MvcEvent $e ){
         $this->layout('layout/onyxsystem');
@@ -27,6 +28,12 @@ class SystemController extends AbstractActionController
     
     public function aclAction(){
         $sm = $this->getServiceLocator();
+        
+        $aclTable = $this->getAclTable();
+        $aclData = $aclTable->fetchAll();
+        \Zend\Debug\Debug::dump($aclData);
+        exit();
+        
         $config = $sm->get('config');
         $routes = array();
         foreach($config['router']['routes'] as $key => $data){
@@ -94,6 +101,14 @@ class SystemController extends AbstractActionController
             $this->flashMessenger()->addMessage('Error creating form files');
         }
         return $this->redirect()->toRoute('system');
+    }
+    
+    public function getAclTable(){
+        if (!$this->aclTable) {
+            $sm = $this->getServiceLocator();
+            $this->aclTable = $sm->get('User\Model\AclTable');
+        }
+        return $this->aclTable;
     }
 
     private function checkExists($tableName){
