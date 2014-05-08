@@ -46,7 +46,12 @@
                         <tr>
                           <td><?php echo $route; ?></td>
                           <?php foreach($this->roles as $roleid => $role){?>
-                          <td><label><input type="checkbox" value="<?php echo $route; ?>_<?php echo $roleid;?>" name="route[]"/> Allow</label></td>
+                          <?php $checked = '';
+                          if(array_key_exists($route."_".$roleid, $this->data)){
+                              $checked = 'checked';
+                          }                          
+                          ?>
+                          <td><label><input type="checkbox" <?php echo $checked; ?> value="<?php echo $route; ?>_<?php echo $roleid;?>" name="route[]"/> Allow</label></td>
                           <?php }?>
                         </tr>   
                         <?php }?>

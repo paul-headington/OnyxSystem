@@ -481,7 +481,11 @@ class ModelGenerator {
                     ),
                 )),
             )),
-            MethodGenerator::fromArray(array(
+            
+        );
+        
+        if($classname == 'User'){
+            $tablemethods_class[] = MethodGenerator::fromArray(array(
                 'name'       => 'updateLogin',
                 'parameters' => array('id'),
                 'body'       => '$data[\'logindate\'] = date(\'Y-m-d H:i:s\');'.PHP_EOL.'$this->tableGateway->update($data, array(\'id\' => $id));',                
@@ -495,8 +499,8 @@ class ModelGenerator {
                         ),
                     ),
                 )),
-            )), 
-        );
+            ));
+        }
         
         
 

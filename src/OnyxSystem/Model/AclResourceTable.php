@@ -112,17 +112,12 @@ class AclResourceTable
     {
         $this->tableGateway->delete(array('id' => $id));
     }
-
-    /**
-     * update user login by id
-     *
-     * @id The primary key of the object
-     */
-    public function updateLogin($id)
-    {
-        $data['logindate'] = date('Y-m-d H:i:s');
-        $this->tableGateway->update($data, array('id' => $id));
-    }
+    
+    
+   
+    
+    
+    
 
 
 }

@@ -5,6 +5,8 @@ use OnyxSystem\Model\AclResource;
 use OnyxSystem\Model\AclResourceTable;
 use OnyxSystem\Model\AclRole;
 use OnyxSystem\Model\AclRoleTable;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
 
 class Module
 {
