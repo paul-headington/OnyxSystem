@@ -5,21 +5,60 @@
                 <h3 class="panel-title">System Tools - ACL</h3>
             </div>
             <div class="panel-body">
-                <p>Here you can set permissions for user roles to application routes.</p>                
+                <p>Here you can set permissions for user roles to application routes.</p>     
+                <h4>Roles</h4>
+                <p>
+                    <ul>
+                    <?php foreach($this->roles as $role){?>
+                        <li><?php echo $role; ?></li>
+                    <?php }?>
+                    </ul>
+                </p>
+                <form method="POST" action="/system/aclRole" class="form-inline" role="form">
+                    <div class="form-group">
+                        <label class="sr-only" for="newrole">New Role</label>
+                        <input type="text" class="form-control" id="newrole" name="newrole" placeholder="Role">
+                      </div>                      
+                      <button type="submit" class="btn btn-default">Add Role</button>
+                </form>
             </div>
         </div>
     </div>
     <div class="col-md-8">
         <div class="panel panel-default"> 
             <div class="panel-heading">
-                <h3 class="panel-title">Routes</h3>
+                <h3 class="panel-title">Route Permssions</h3>
             </div>            
-            <form>
-            <ul>
-                <?php foreach($this->routes as $route){?>
-                <li><input type="checkbox" value="<?php echo $route; ?>" name="route"/></li>
-               <?php }?>
-             </ul>
+            <form method="POST" action="/system/aclResource" role="form" class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-sm-12">
+                    <table class="table table-condensed">
+                      <thead>
+                        <tr>
+                          <th>Route</th>
+                          <?php foreach($this->roles as $role){?>
+                          <th><?php echo $role; ?></th>
+                          <?php }?>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach($this->routes as $route){?>
+                        <tr>
+                          <td><?php echo $route; ?></td>
+                          <?php foreach($this->roles as $roleid => $role){?>
+                          <td><label><input type="checkbox" value="<?php echo $route; ?>_<?php echo $roleid;?>" name="route[]"/> Allow</label></td>
+                          <?php }?>
+                        </tr>   
+                        <?php }?>
+                      </tbody>
+                    </table>
+                    </div>
+                </div>  
+                <div class="form-group">
+                    <div class="col-sm-offset-8 col-sm-4">
+                        <button type="submit" class="btn btn-default">Update Permissions</button>
+                    </div>
+                </div>
             </form>          
         </div>
     </div>

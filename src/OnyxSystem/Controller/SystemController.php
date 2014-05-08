@@ -11,7 +11,8 @@ use Zend\Session\Container;
 class SystemController extends AbstractActionController
 {
     private $moduleName;
-    private $aclTable;
+    private $aclResourceTable;
+    private $aclRoleTable;
     
     public function onDispatch( \Zend\Mvc\MvcEvent $e ){
         $this->layout('layout/onyxsystem');
@@ -26,29 +27,6 @@ class SystemController extends AbstractActionController
         }
     }
     
-    public function aclAction(){
-        $sm = $this->getServiceLocator();
-        
-        $aclTable = $this->getAclTable();
-        $aclData = $aclTable->fetchAll();
-        \Zend\Debug\Debug::dump($aclData);
-        exit();
-        
-        $config = $sm->get('config');
-        $routes = array();
-        foreach($config['router']['routes'] as $key => $data){
-            $routes[] = $key;
-        }
-        
-        return new ViewModel(array('routes' => $routes));
-    }
-    
-    public function testAction(){
-        echo "Test";
-        exit();
-    }
-
-
     public function indexAction()
     {
         $return = array();
@@ -78,6 +56,57 @@ class SystemController extends AbstractActionController
         return new ViewModel($return);
     }
     
+    public function aclAction(){
+        $routes = array();
+        $roles = array();
+        
+        $sm = $this->getServiceLocator();    
+        
+        $aclRoleTable = $this->getAclRoleTable();
+        $aclRoleTableData = $aclRoleTable->fetchAll();
+        foreach($aclRoleTableData as $role){
+            $roles[$role->id] = $role->name;
+        
+        }
+        $config = $sm->get('config');
+        
+        foreach($config['router']['routes'] as $key => $data){
+            $routes[] = $key;
+        }
+        
+        return new ViewModel(array('routes' => $routes, 'roles' => $roles));
+    }
+    
+    public function aclResourceAction(){
+        if($this->getRequest()->isPost()){
+            $data = $this->getRequest()->getPost();
+            \Zend\Debug\Debug::dump($data);
+            exit();
+            if($newRole){
+                $role = new \OnyxSystem\Model\AclRole();
+                $role->name = $newRole;
+                $aclRoleTable = $this->getAclRoleTable();
+                $aclRoleTable->save($role);
+            }
+        }
+        
+        return $this->redirect()->toRoute('acl');
+    }
+
+    public function aclRoleAction(){
+        if($this->getRequest()->isPost()){
+            $newRole = strtolower($this->getRequest()->getPost("newrole"));
+            if($newRole){
+                $role = new \OnyxSystem\Model\AclRole();
+                $role->name = $newRole;
+                $aclRoleTable = $this->getAclRoleTable();
+                $aclRoleTable->save($role);
+            }
+        }
+        
+        return $this->redirect()->toRoute('acl');
+    }
+
     public function createModelAction(){
         $sm = $this->getServiceLocator();
         $modelGen = new Service\ModelGenerator($sm);
@@ -103,12 +132,25 @@ class SystemController extends AbstractActionController
         return $this->redirect()->toRoute('system');
     }
     
-    public function getAclTable(){
-        if (!$this->aclTable) {
+    private function getRoleResourceMap(){
+        $aclResourceTable = $this->getAclResourceTable();
+        $aclResourceTableData = $aclResourceTable->fetchAll();
+    }
+    
+    private function getAclResourceTable(){
+        if (!$this->aclResourceTable) {
             $sm = $this->getServiceLocator();
-            $this->aclTable = $sm->get('User\Model\AclTable');
+            $this->aclResourceTable = $sm->get('AclResourceTable');
         }
-        return $this->aclTable;
+        return $this->aclResourceTable;
+    }
+    
+    private function getAclRoleTable(){
+        if (!$this->aclRoleTable) {
+            $sm = $this->getServiceLocator();
+            $this->aclRoleTable = $sm->get('AclRoleTable');
+        }
+        return $this->aclRoleTable;
     }
 
     private function checkExists($tableName){

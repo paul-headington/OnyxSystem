@@ -46,6 +46,28 @@ return array(
                     ),
                 ),
             ),
+            'aclrole' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/system/aclRole',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'aclRole',
+                    ),
+                ),
+            ),
+            'aclresource' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/system/aclResource',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'aclResource',
+                    ),
+                ),
+            ),
             'createmodel' => array(
                 'type'    => 'Segment',
                 'options' => array(
