@@ -66,7 +66,7 @@ class SystemController extends AbstractActionController
         $dataMap = $this->getRoleResourceMap();
         
         $aclRoleTable = $this->getAclRoleTable();
-        $aclRoleTableData = $aclRoleTable->fetchAll();
+        $aclRoleTableData = $aclRoleTable->fetchAllWithInheritance();
         foreach($aclRoleTableData as $role){
             $roles[$role->id] = $role->name;
         

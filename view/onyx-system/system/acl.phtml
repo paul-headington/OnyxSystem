@@ -1,3 +1,15 @@
+<script>
+  $(function() {
+    $( "#sortable" ).sortable({
+        stop: function( event, ui ) {
+            $("#sortable" ).children('li').each(function () {
+                console.log(this.id); 
+            });
+        }
+    });
+    $( "#sortable" ).disableSelection();
+  });
+  </script>
 <div class="row">
     <div class="col-md-4">
         <div class="panel panel-default">
@@ -8,11 +20,11 @@
                 <p>Here you can set permissions for user roles to application routes.</p>     
                 <h4>Roles</h4>
                 <p>
-                    <ul>
-                    <?php foreach($this->roles as $role){?>
-                        <li><?php echo $role; ?></li>
+                    <ol id="sortable">
+                    <?php foreach($this->roles as $roleid => $role){?>
+                        <li style="cursor: pointer;" id="<?php echo $roleid; ?>"><?php echo $role; ?></li>
                     <?php }?>
-                    </ul>
+                    </ol>
                 </p>
                 <form method="POST" action="/system/aclRole" class="form-inline" role="form">
                     <div class="form-group">

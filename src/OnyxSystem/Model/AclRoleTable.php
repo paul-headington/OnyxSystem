@@ -112,6 +112,19 @@ class AclRoleTable
     {
         $this->tableGateway->delete(array('id' => $id));
     }
+    
+    
+    /**
+     * Return all data ordered by inheritance
+     */
+    public function fetchAllWithInheritance()
+    {
+        $resultSet = $this->tableGateway->select(function (\Zend\Db\Sql\Select $select) {
+                     $select->order('inheritance_order ASC');
+        });
+        
+        return $resultSet;
+    }
 
     
 
