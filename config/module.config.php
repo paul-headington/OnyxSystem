@@ -106,4 +106,10 @@ return array(
             'onyxsystem' => __DIR__ . '/../view',
         ),
     ),
+    'service_manager'=> array(        
+        'abstract_factories' => array(
+            'OnyxSystem\Service\CommonModelTableAbstractFactory',
+            'OnyxSystem\Service\CommonModelTableGatewayAbstractFactory',
+        ),
+    ),
 );
