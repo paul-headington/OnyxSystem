@@ -95,7 +95,7 @@ class SystemController extends AbstractActionController
                 foreach($data['route'] as $rule){
                     if(!array_key_exists($rule, $dbRecords)){
                         $resource = new AclResource();
-                        $data = split('_', $rule);
+                        $data = explode('_', $rule);
                         $resource->roleid = $data[1]; 
                         $resource->route = $data[0];                        
                         $aclResourceTable->save($resource);
