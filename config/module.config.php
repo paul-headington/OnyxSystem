@@ -35,6 +35,17 @@ return array(
                     ),
                 ),
             ),
+            'rest-api' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/system/rest-api',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'rest',
+                    ),
+                ),
+            ),
             'acl' => array(
                 'type'    => 'Literal',
                 'options' => array(

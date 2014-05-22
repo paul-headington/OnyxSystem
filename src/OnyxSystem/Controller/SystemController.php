@@ -8,6 +8,7 @@ use Zend\View\Model\ViewModel;
 use OnyxSystem\Service;
 use OnyxSystem\Model\AclRole;
 use OnyxSystem\Model\AclResource;
+use OnyxRest\Model\RestResource;
 use Zend\Session\Container;
 
 class SystemController extends AbstractActionController
@@ -15,6 +16,7 @@ class SystemController extends AbstractActionController
     private $moduleName;
     private $aclResourceTable;
     private $aclRoleTable;
+    private $restResourceTable;
     
     public function onDispatch( \Zend\Mvc\MvcEvent $e ){
         $this->layout('layout/onyxsystem');
@@ -54,6 +56,93 @@ class SystemController extends AbstractActionController
                 "exists" => $this->checkExists($tableName),
             );            
         }
+        $return["tables"] = $tableNames;        
+        return new ViewModel($return);
+    }
+    
+    public function restAction(){
+        $sm = $this->getServiceLocator();
+        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+        $metadata = new \Zend\Db\Metadata\Metadata($dbAdapter);
+        $data = $metadata->getTableNames();   
+        $tableNames = array();
+        foreach($data as $tableName){ 
+            //create default factory name
+            $factoryDefault = '';
+            $parts = explode("_", $tableName);
+            foreach ($parts as $part){
+                $factoryDefault .= ucfirst($part);
+            }
+            $factoryDefault .= "Table";
+            
+            $tableNames[$tableName] = array(
+                "tablename" => $tableName,
+                "name" => $tableName,
+                "factory" => $factoryDefault,
+                "checked" => '',
+                "auth" => '',
+                'custom' => false,
+                "id" => null,
+            );            
+        }
+        
+        $dbRecords = $this->getRestResource();
+        
+        foreach($dbRecords as $row){
+            $authChecked = '';
+            if((bool)$row->auth){
+                $authChecked = 'checked';
+            }
+            if(array_key_exists($row->tablename, $tableNames)){
+                $tableNames[$row->tablename]['name'] = $row->name;
+                $tableNames[$row->tablename]['factory'] = $row->factory;
+                $tableNames[$row->tablename]['checked'] = 'checked';
+                $tableNames[$row->tablename]['auth'] = $authChecked;                
+            }else{
+                $tableNames[$row->tablename] = array(
+                    "tablename" => $row->tablename,
+                    "name" => $row->name,
+                    "factory" => $row->factory,
+                    "checked" => 'checked',
+                    "auth" => $authChecked,
+                    "custom" => true,
+                    "id" => $row->id,
+                ); 
+            }
+        }
+        
+        // posted data function
+        if($this->getRequest()->isPost()){
+            
+            $data = $this->getRequest()->getPost();
+            $RestResourceTable = $this->getRestResourceTable();
+            
+            foreach($data['allow'] as $key => $state){
+                //add new record
+                $authChecked = false;
+                if(isset($data['auth'][$key])){
+                    $authChecked = true;
+                }
+                $resource = new RestResource();
+                $resource->tablename = $key;
+                $resource->name = $data['name'][$key];
+                $resource->factory = $data['factory'][$key];
+                $resource->auth = $authChecked;
+                $RestResourceTable->save($resource);                
+            }
+            //cleanup
+            foreach($dbRecords as $item){
+                $RestResourceTable->delete($item->id);
+            }
+                
+            $this->flashMessenger()->addMessage('Rest Resource data updated');           
+            return $this->redirect()->toRoute('rest-api');
+        }
+        $flashMessenger = $this->flashMessenger();
+        if ($flashMessenger->hasMessages()) {
+            $return['messages'] = $flashMessenger->getMessages();
+        }
+        
         $return["tables"] = $tableNames;        
         return new ViewModel($return);
     }
@@ -164,6 +253,16 @@ class SystemController extends AbstractActionController
         return $output;
     }
     
+    private function getRestResource(){
+        $output = array();        
+        $restResourceTable = $this->getRestResourceTable();
+        $data = $restResourceTable->fetchAll();
+        foreach($data as $resource){
+            $output[$resource->tablename] = $resource;
+        }
+        return $output;
+    }
+    
     private function getAclResourceTable(){
         if (!$this->aclResourceTable) {
             $sm = $this->getServiceLocator();
@@ -178,6 +277,14 @@ class SystemController extends AbstractActionController
             $this->aclRoleTable = $sm->get('AclRoleTable');
         }
         return $this->aclRoleTable;
+    }
+    
+    private function getRestResourceTable(){
+        if (!$this->restResourceTable) {
+            $sm = $this->getServiceLocator();
+            $this->restResourceTable = $sm->get('RestResourceTable');
+        }
+        return $this->restResourceTable;
     }
 
     private function checkExists($tableName){
