@@ -147,6 +147,34 @@ class SystemController extends AbstractActionController
         return new ViewModel($return);
     }
     
+    public function restaddAction(){
+        if($this->getRequest()->isPost()){
+            $data = $this->getRequest()->getPost();
+            $RestResourceTable = $this->getRestResourceTable();
+            $resource = new RestResource();
+            $resource->tablename = $data['name'] . '_' .  substr(md5(time()), 0,3);
+            $resource->name = $data['name'];
+            $resource->factory = $data['factory'];
+            $resource->auth = false;
+            $RestResourceTable->save($resource);  
+            $this->flashMessenger()->addMessage('Resource data updated');  
+        }
+        
+        return $this->redirect()->toRoute('rest-api');
+    }
+    
+    public function restdeleteAction(){
+        $id = $this->params()->fromRoute('id');
+        if($id){
+            $RestResourceTable = $this->getRestResourceTable();
+            $RestResourceTable->delete($id);
+            $this->flashMessenger()->addMessage('Resource data delete');  
+            
+        }
+            
+        return $this->redirect()->toRoute('rest-api');
+    }
+
     public function aclAction(){
         $routes = array();
         $roles = array();

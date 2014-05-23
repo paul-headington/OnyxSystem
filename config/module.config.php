@@ -18,22 +18,6 @@ return array(
                         'action'        => 'index',
                     ),
                 ),
-                'may_terminate' => true,
-                'child_routes' => array(
-                    'default' => array(
-                        'type'    => 'Segment',
-                        'options' => array(
-                            'route'    => '[/:controller[/:action][/:id]]',
-                            'constraints' => array(
-                                'controller' => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
-                                'id'         => '[a-zA-Z][a-zA-Z0-9_-]*',
-                            ),
-                            'defaults' => array(
-                            ),
-                        ),
-                    ),
-                ),
             ),
             'rest-api' => array(
                 'type'    => 'Literal',
@@ -43,6 +27,32 @@ return array(
                         '__NAMESPACE__' => 'OnyxSystem\Controller',
                         'controller'    => 'system',
                         'action'        => 'rest',
+                    ),
+                ),
+            ),
+            'rest-add' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/system/rest-add',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'restadd',
+                    ),
+                ),
+            ),
+            'rest-delete' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/system/rest-delete/:id',
+                    'constraints' => array(
+                        'table' => '[0-9]+',
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'restdelete',
+                        'id'            => null
                     ),
                 ),
             ),
