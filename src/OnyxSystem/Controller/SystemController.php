@@ -73,12 +73,14 @@ class SystemController extends AbstractActionController
             foreach ($parts as $part){
                 $factoryDefault .= ucfirst($part);
             }
+            $modelFactoryDefault = $factoryDefault;
             $factoryDefault .= "Table";
             
             $tableNames[$tableName] = array(
                 "tablename" => $tableName,
                 "name" => $tableName,
                 "factory" => $factoryDefault,
+                "modelfactory" => $modelFactoryDefault,
                 "checked" => '',
                 "auth" => '',
                 'custom' => false,
@@ -96,6 +98,7 @@ class SystemController extends AbstractActionController
             if(array_key_exists($row->tablename, $tableNames)){
                 $tableNames[$row->tablename]['name'] = $row->name;
                 $tableNames[$row->tablename]['factory'] = $row->factory;
+                $tableNames[$row->tablename]['modelfactory'] = $row->modelfactory;
                 $tableNames[$row->tablename]['checked'] = 'checked';
                 $tableNames[$row->tablename]['auth'] = $authChecked;                
             }else{
@@ -103,6 +106,7 @@ class SystemController extends AbstractActionController
                     "tablename" => $row->tablename,
                     "name" => $row->name,
                     "factory" => $row->factory,
+                    "modelfactory" => $row->modelfactory,
                     "checked" => 'checked',
                     "auth" => $authChecked,
                     "custom" => true,
@@ -127,6 +131,7 @@ class SystemController extends AbstractActionController
                 $resource->tablename = $key;
                 $resource->name = $data['name'][$key];
                 $resource->factory = $data['factory'][$key];
+                $resource->modelfactory = $data['modelfactory'][$key];
                 $resource->auth = $authChecked;
                 $RestResourceTable->save($resource);                
             }
@@ -155,6 +160,7 @@ class SystemController extends AbstractActionController
             $resource->tablename = $data['name'] . '_' .  substr(md5(time()), 0,3);
             $resource->name = $data['name'];
             $resource->factory = $data['factory'];
+            $resource->modelfactory = $data['modelfactory'];
             $resource->auth = false;
             $RestResourceTable->save($resource);  
             $this->flashMessenger()->addMessage('Resource data updated');  

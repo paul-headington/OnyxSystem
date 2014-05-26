@@ -93,7 +93,7 @@ class AclResourceTable
         $id = (int)$aclresource->id;
         if ($id == 0) {
         	$data['postdate'] = date('Y-m-d H:i:s');
-        	$this->tableGateway->insert($data);
+        	return $this->tableGateway->insert($data);
         } else {
         	if ($this->getById($id)) {
         		$this->tableGateway->update($data, array('id' => $id));

@@ -55,7 +55,7 @@ class AclRole
     protected $validation = array(
         'id' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 array(
                     'name' => 'not_empty'
                 ),
@@ -69,7 +69,7 @@ class AclRole
         ),
         'name' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 array(
                     'name' => 'not_empty'
                 ),
@@ -83,7 +83,7 @@ class AclRole
         ),
         'inheritance_order' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 array(
                     'name' => 'not_empty'
                 ),
@@ -97,13 +97,13 @@ class AclRole
         ),
         'updatedon' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 
             )
         ),
         'postdate' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 
             )
         )

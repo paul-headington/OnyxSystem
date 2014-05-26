@@ -18,22 +18,19 @@ namespace OnyxSystem\Service;
 use Zend\ServiceManager\AbstractFactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
  
-class CommonModelTableAbstractFactory implements AbstractFactoryInterface
+class CommonModelAbstractFactory implements AbstractFactoryInterface
 {
     public function canCreateServiceWithName(ServiceLocatorInterface $locator, $name, $requestedName)
-    {        
-        if(substr($requestedName, -5) === 'Table'){
-            $className = 'Application\\Model\\'.$requestedName;            
-            return class_exists($className);
-        }
-        return false;
+    {       
+        $className = 'Application\\Model\\'.$requestedName;            
+        return class_exists($className);
+        
     }
  
     public function createServiceWithName(ServiceLocatorInterface $locator, $name, $requestedName)
     {
         $className = 'Application\\Model\\'.$requestedName;
-        $tableGateway = $locator->get($requestedName.'Gateway');
-        $table = new $className($tableGateway);
-        return $table;
+        $model = new $className();
+        return $model;
     }
 }

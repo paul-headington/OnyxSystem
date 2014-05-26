@@ -55,7 +55,7 @@ class AclResource
     protected $validation = array(
         'id' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 array(
                     'name' => 'not_empty'
                 ),
@@ -69,7 +69,7 @@ class AclResource
         ),
         'roleid' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 array(
                     'name' => 'not_empty'
                 ),
@@ -83,7 +83,7 @@ class AclResource
         ),
         'route' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 array(
                     'name' => 'not_empty'
                 ),
@@ -97,13 +97,13 @@ class AclResource
         ),
         'lastupdated' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 
             )
         ),
         'postdate' => array(
             'required' => false,
-            'validator' => array(
+            'validators' => array(
                 
             )
         )

@@ -15,7 +15,11 @@
                     <div class="form-group">
                         <label class="sr-only" for="factory">Factory</label>
                         <input type="text" class="form-control" id="factory" required="true" name="factory" placeholder="Factory">
-                    </div> 
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="modelfactory">Model Factory</label>
+                        <input type="text" class="form-control" id="modelfactory" required="true" name="modelfactory" placeholder="Model Factory">
+                    </div>
                     <button type="submit" class="btn btn-default">Add Access</button>
                 </form>
             </div>
@@ -33,8 +37,9 @@
                       <thead>
                         <tr>
                           <th>Table Name</th>
-                          <th>Rest Object Name</th>
+                          <th>Object Name</th>
                           <th>Factory</th>
+                          <th>Model Factory</th>
                           <th>Rest Access</th>
                           <th>Require Auth</th>
                           <th></th>
@@ -46,6 +51,7 @@
                           <td><?php echo $object['tablename']; ?></td>                          
                           <td><input type="text" value="<?php echo $object['name']; ?>" name="name[<?php echo $object['tablename']; ?>]"/></td>    
                           <td><input type="text" value="<?php echo $object['factory']; ?>" name="factory[<?php echo $object['tablename']; ?>]"/></td>    
+                          <td><input type="text" value="<?php echo $object['modelfactory']; ?>" name="modelfactory[<?php echo $object['tablename']; ?>]"/></td>    
                           <td><label><input type="checkbox" <?php echo $object['checked']; ?> value="true" name="allow[<?php echo $object['tablename']; ?>]"/> Allow</label></td>
                           <td><label><input type="checkbox" <?php echo $object['auth']; ?> value="true" name="auth[<?php echo $object['tablename']; ?>]"/> Allow</label></td>   
                           <td><?php if($object['custom']){ ?><a href="/system/rest-delete/<?php echo $object['id']; ?>">delete</a><?php }?></td>
@@ -64,6 +70,33 @@
         </div>
     </div>
     
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Test Post</h3>
+            </div>
+            <div class="panel-body">
+                <p>This test posts for model create</p>  
+                <form method="PUT" action="/api/user/5" class="form" role="form">
+                    <div class="form-group">
+                        <label class="sr-only" for="firstname">firstname</label>
+                        <input type="text" class="form-control" id="firstname" required="true" name="firstname" placeholder="firstname">
+                    </div>   
+                    <div class="form-group">
+                        <label class="sr-only" for="lastname">lastname</label>
+                        <input type="text" class="form-control" id="lastname" required="true" name="lastname" placeholder="lastname">
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="email">email</label>
+                        <input type="text" class="form-control" id="email" name="email" placeholder="email">
+                    </div>
+                    <button type="submit" class="btn btn-default">test</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 <?php 
 if(is_array($this->messages)){ 

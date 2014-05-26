@@ -129,6 +129,7 @@ return array(
     ),
     'service_manager'=> array(        
         'abstract_factories' => array(
+            'OnyxSystem\Service\CommonModelAbstractFactory',
             'OnyxSystem\Service\CommonModelTableAbstractFactory',
             'OnyxSystem\Service\CommonModelTableGatewayAbstractFactory',
         ),
