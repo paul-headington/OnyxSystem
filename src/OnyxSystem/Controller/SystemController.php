@@ -174,10 +174,8 @@ class SystemController extends AbstractActionController
         if($id){
             $RestResourceTable = $this->getRestResourceTable();
             $RestResourceTable->delete($id);
-            $this->flashMessenger()->addMessage('Resource data delete');  
-            
-        }
-            
+            $this->flashMessenger()->addMessage('Resource data delete');             
+        }            
         return $this->redirect()->toRoute('rest-api');
     }
 
@@ -196,8 +194,17 @@ class SystemController extends AbstractActionController
         }
         $config = $sm->get('config');
         
+        //\Zend\Debug\Debug::dump($config['router']['routes']['home']['child_routes']);
+        //exit();
+        
         foreach($config['router']['routes'] as $key => $data){
             $routes[] = $key;
+            if(isset($data['child_routes'])){
+                foreach($data['child_routes'] as $childKey => $childData){
+                    $routes[] = $key . '/' . $childKey;
+                }            
+            }
+            
         }
         
         $return = array('routes' => $routes, 'roles' => $roles, 'data' => $dataMap);
