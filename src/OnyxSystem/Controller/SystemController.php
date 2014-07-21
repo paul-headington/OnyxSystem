@@ -17,6 +17,7 @@ class SystemController extends AbstractActionController
     private $aclResourceTable;
     private $aclRoleTable;
     private $restResourceTable;
+    protected $eventIdentifier = 'Onyx\Service\EventManger';
     
     public function onDispatch( \Zend\Mvc\MvcEvent $e ){
         $this->layout('layout/onyxsystem');
@@ -33,6 +34,9 @@ class SystemController extends AbstractActionController
     
     public function indexAction()
     {
+        // trigger MyEvent
+        //$this->getEventManager()->trigger('logError', null, array("data" => "data"));
+        
         $return = array();
         $container = new Container('systemBuild');
         if($this->getRequest()->isPost()){
@@ -342,6 +346,6 @@ class SystemController extends AbstractActionController
         }
         return true;
     }
-    
+      
   
 }
