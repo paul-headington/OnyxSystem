@@ -10,6 +10,20 @@ use Zend\Db\TableGateway\TableGateway;
 
 class Module
 {
+    /**
+     * Configure PHP ini settings on the bootstrap event
+     * @param Event $e
+     */
+    public function onBootstrap(\Zend\Mvc\MvcEvent $e) {
+        $config = $e->getApplication()->getServiceManager()->get('config');
+        $phpSettings = $config['phpSettings'];
+        if($phpSettings) {
+            foreach($phpSettings as $key => $value) {
+                ini_set($key, $value);
+            }
+        }
+    }    
+    
     public function getAutoloaderConfig()
     {
         return array(
