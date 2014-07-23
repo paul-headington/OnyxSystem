@@ -35,7 +35,11 @@ class SystemController extends AbstractActionController
     public function indexAction()
     {
         // trigger MyEvent
-        //$this->getEventManager()->trigger('logError', null, array("data" => "data"));
+//        $this->getEventManager()->trigger('sendMessage', null, array(
+//            "to" => array('paul.headington@colensobbdo.co.nz', 'Paul'),
+//            "subject" => "test subject",
+//            "body" => "<h1>test</h1><br/><br/><p>message</p>",
+//            ));
         
         $return = array();
         $container = new Container('systemBuild');
