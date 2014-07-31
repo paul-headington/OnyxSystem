@@ -467,7 +467,7 @@ class ModelGenerator {
             MethodGenerator::fromArray(array(
                 'name'       => 'save',
                 'parameters' => array(new \Zend\Code\Generator\ParameterGenerator(strtolower($classname), $classname)),
-                'body'       => '$data = array('.PHP_EOL.$saveBody.PHP_EOL.');'.PHP_EOL.'$id = (int)$'.strtolower($classname).'->id;'.PHP_EOL.'if ($id == 0) {'.PHP_EOL.PHP_TAB.'$data[\'postdate\'] = date(\'Y-m-d H:i:s\');'.PHP_EOL.PHP_TAB.'return $this->tableGateway->insert($data);'.PHP_EOL.'} else {'.PHP_EOL.PHP_TAB.'if ($this->getById($id)) {'.PHP_EOL.PHP_TAB.PHP_TAB.'$this->tableGateway->update($data, array(\'id\' => $id));'.PHP_EOL.PHP_TAB.'} else {'.PHP_EOL.PHP_TAB.PHP_TAB.'throw new \Exception(\''.$classname.' id does not exist\');'.PHP_EOL.PHP_TAB.'}'.PHP_EOL.'}',                
+                'body'       => '$data = array('.PHP_EOL.$saveBody.PHP_EOL.');'.PHP_EOL.'$id = (int)$'.strtolower($classname).'->id;'.PHP_EOL.'if ($id == 0) {'.PHP_EOL.PHP_TAB.'$data[\'postdate\'] = date(\'Y-m-d H:i:s\');'.PHP_EOL.PHP_TAB.'$id = $this->tableGateway->insert($data);'.PHP_EOL.PHP_TAB.'$user->id = $id;'.PHP_EOL.PHP_TAB.'return $id;'.PHP_EOL.'} else {'.PHP_EOL.PHP_TAB.'if ($this->getById($id)) {'.PHP_EOL.PHP_TAB.PHP_TAB.'$this->tableGateway->update($data, array(\'id\' => $id));'.PHP_EOL.PHP_TAB.'} else {'.PHP_EOL.PHP_TAB.PHP_TAB.'throw new \Exception(\''.$classname.' id does not exist\');'.PHP_EOL.PHP_TAB.'}'.PHP_EOL.'}',                
                 'docblock'   => DocBlockGenerator::fromArray(array(
                     'shortDescription' => 'retrieve object by id',
                     'longDescription'  => null,
