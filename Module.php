@@ -56,7 +56,7 @@ class Module
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new AclResource());
-                    return new TableGateway('acl_resource', $dbAdapter, null, $resultSetPrototype);
+                    return new TableGateway('onyx_acl_resource', $dbAdapter, null, $resultSetPrototype);
                 },
                 'AclRoleTable' =>  function($sm) {
                     $tableGateway = $sm->get('AclRoleTableGateway');
@@ -67,7 +67,7 @@ class Module
                     $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new AclRole());
-                    return new TableGateway('acl_role', $dbAdapter, null, $resultSetPrototype);
+                    return new TableGateway('onyx_acl_role', $dbAdapter, null, $resultSetPrototype);
                 },       
             ),
             
