@@ -19,6 +19,43 @@ return array(
                     ),
                 ),
             ),
+            'modules' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/system/modules',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'modules',
+                    ),
+                ),
+            ),
+            'setup' => array(
+                'type'    => 'Segment',
+                'options' => array(
+                    'route'    => '/system/setup[/:repo]',
+                    'constraints' => array(
+                        'repo' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                    ),
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'setup',
+                        'repo'         => null
+                    ),
+                ),
+            ),
+            'db-models' => array(
+                'type'    => 'Literal',
+                'options' => array(
+                    'route'    => '/system/models',
+                    'defaults' => array(
+                        '__NAMESPACE__' => 'OnyxSystem\Controller',
+                        'controller'    => 'system',
+                        'action'        => 'models',
+                    ),
+                ),
+            ),
             'rest-api' => array(
                 'type'    => 'Literal',
                 'options' => array(

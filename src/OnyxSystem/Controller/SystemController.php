@@ -6,6 +6,7 @@ namespace OnyxSystem\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use OnyxSystem\Service;
+use OnyxSystem\Service\GitHubPull;
 use OnyxSystem\Model\AclRole;
 use OnyxSystem\Model\AclResource;
 use OnyxRest\Model\RestResource;
@@ -33,6 +34,99 @@ class SystemController extends AbstractActionController
     }
     
     public function indexAction()
+    {
+        // trigger MyEvent
+//        $this->getEventManager()->trigger('sendMessage', null, array(
+//            "to" => array('paul.headington@colensobbdo.co.nz', 'Paul'),
+//            "subject" => "test subject",
+//            "body" => "<h1>test</h1><br/><br/><p>message</p>",
+//            ));
+        
+        $return = array();
+        
+        $flashMessenger = $this->flashMessenger();
+        if ($flashMessenger->hasMessages()) {
+            $return['messages'] = $flashMessenger->getMessages();
+        }
+        
+        $git = new GitHubPull();
+        $list = $git->getRepoList('paul-headington');
+        $repoList = array();
+        foreach($list as $item){
+            if(stripos($item->name, 'onyx') !== false){
+                array_push($repoList, array('name' => $item->name, 'url' => $item->html_url));
+            }
+            
+        }
+        $return['repoList'] = $repoList;
+        return new ViewModel($return);
+    }
+    
+    public function setupAction(){
+        $sm = $this->getServiceLocator();
+        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+        $repo = $this->params('repo');
+        if($repo != null){
+            $basepath = realpath($_SERVER['DOCUMENT_ROOT'] . '/../');
+            $folder = $basepath . '/vendor/paul-headington/' . $repo . '/data';
+            $dirInfo = scandir($folder);
+            if(is_array($dirInfo)){
+                foreach ($dirInfo as $file){
+                    if(stripos($file, '.sql') !== false){
+                     $sql = file_get_contents($folder . '/' . $file);
+                     if($sql !== false){
+                         //$dbAdapter->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
+                         $statement = $dbAdapter->query($sql);
+                         
+                         $result = $statement->execute();
+                         \Zend\Debug\Debug::dump($result);
+                         exit();
+                         $this->flashMessenger()->addMessage('database table(s) created.');
+                     }else{
+                         $this->flashMessenger()->addMessage('can\'t read file');
+                     }
+                    }else{
+                         $this->flashMessenger()->addMessage('no sql file found');
+                     }
+                }
+            }else{
+                  $this->flashMessenger()->addMessage('no data directory found');       
+            }
+            
+            
+        }else{
+            $this->flashMessenger()->addMessage('no module specified');
+        }
+        return $this->redirect()->toRoute('system');
+    }
+
+    public function modulesAction()
+    {
+        
+        $return = array();
+        
+        $return["moduleName"] = $container->moduleName;
+        $flashMessenger = $this->flashMessenger();
+        if ($flashMessenger->hasMessages()) {
+            $return['messages'] = $flashMessenger->getMessages();
+        }
+        
+        $sm = $this->getServiceLocator();
+//        $dbAdapter = $sm->get('Zend\Db\Adapter\Adapter');
+//        $metadata = new \Zend\Db\Metadata\Metadata($dbAdapter);
+//        $data = $metadata->getTableNames();
+//        $tableNames = array();
+//        foreach($data as $tableName){
+//            $tableNames[] = array(
+//                "name" => $tableName,
+//                "exists" => $this->checkExists($tableName),
+//            );            
+//        }
+//        $return["tables"] = $tableNames;        
+        return new ViewModel($return);
+    }
+    
+    public function modelsAction()
     {
         // trigger MyEvent
 //        $this->getEventManager()->trigger('sendMessage', null, array(
@@ -276,7 +370,7 @@ class SystemController extends AbstractActionController
         }else{
             $this->flashMessenger()->addMessage('Error creating model files');
         }
-        return $this->redirect()->toRoute('system');
+        return $this->redirect()->toRoute('modules');
         
     }
     
@@ -289,7 +383,7 @@ class SystemController extends AbstractActionController
         }else{
             $this->flashMessenger()->addMessage('Error creating form files');
         }
-        return $this->redirect()->toRoute('system');
+        return $this->redirect()->toRoute('modules');
     }
     
     private function getRoleResourceMap(){

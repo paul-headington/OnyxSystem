@@ -5,33 +5,27 @@
                 <h3 class="panel-title">System Tools</h3>
             </div>
             <div class="panel-body">
-                <p>The system tools here allow you to generate the model files for database tables. Please note that existing table files will be over written and any custom method will be lost.</p>
-                <h4>Current Module</h4>
-                <p>The Current Module that this will generate class files for is:</p>
-                <h5><?php echo $this->moduleName; ?></h5>
-                <form class="form-inline" role="form" method="POST" action="">
-                    <div class="form-group">
-                      <label class="sr-only" for="module">Module</label>
-                      <input type="text" class="form-control" id="module" name="module" placeholder="Module Name" style="width:200px;">
-                    </div>
-                    <button type="submit" class="btn btn-success pull-right">Set Module &raquo;</button>
-                  </form>
+                <p>The Onyx System is build up with a collection of modules. Some are dependent on each other so installation via composer is the best method.</p>
+                <p><a href="https://getcomposer.org/" target="_blank">https://getcomposer.org/</a></p>
+                <h4>Module List</h4>
+                <ul>
+                <?php foreach($this->repoList as $repo){ ?>
+                    <li><a href="<?php echo $repo['url']; ?>" target="_blank"><?php echo $repo['name']; ?></a></li>
+                <?php } ?>
+                </ul>    
             </div>
         </div>
     </div>
     <div class="col-md-8">
         <div class="panel panel-default"> 
             <div class="panel-heading">
-                <h3 class="panel-title">Tables</h3>
+                <h3 class="panel-title">Database Tables Setup</h3>
             </div>            
             <ul class="list-group">
-                <?php foreach($this->tables as $table){?>
-                <li class="list-group-item list-group-item-<?php if($table['exists']){ echo "success";}else{echo "info";} ?>"><?php echo $table['name'];?><span class="badge"><a href="/system/create-form/<?php echo $table['name'];?>">Create Form</a></span><span class="badge"><a href="/system/create-model/<?php echo $table['name'];?>">Create Model</a></span></li>
-               <?php }?>
+                <?php foreach($this->repoList as $repo){ ?>
+                    <li class="list-group-item list-group-item-info"><?php echo $repo['name']; ?><span class="badge"><a href="/system/setup/<?php echo $repo['name']; ?>">Create default table(s)</a></span></li>
+                <?php } ?>
              </ul>
-            <div class="panel-body">
-                <p><a class="btn btn-success pull-right" href="/system/create-all">Generate All &raquo;</a></p>
-            </div>
           
         </div>
     </div>
