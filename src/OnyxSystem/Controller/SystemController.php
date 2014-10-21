@@ -53,7 +53,7 @@ class SystemController extends AbstractActionController
         $list = $git->getRepoList('paul-headington');
         $repoList = array();
         foreach($list as $item){
-            if(stripos($item->name, 'onyx') !== false){
+            if((stripos($item->name, 'onyx') !== false) && ($item->name != "OnyxTestBuild")){
                 array_push($repoList, array('name' => $item->name, 'url' => $item->html_url));
             }
             
@@ -75,18 +75,20 @@ class SystemController extends AbstractActionController
                     if(stripos($file, '.sql') !== false){
                      $sql = file_get_contents($folder . '/' . $file);
                      if($sql !== false){
-                         //$dbAdapter->setAttribute(PDO::ATTR_EMULATE_PREPARES, 1);
                          $statement = $dbAdapter->query($sql);
                          
                          $result = $statement->execute();
-                         \Zend\Debug\Debug::dump($result);
-                         exit();
                          $this->flashMessenger()->addMessage('database table(s) created.');
+                         
                      }else{
                          $this->flashMessenger()->addMessage('can\'t read file');
                      }
                     }else{
+                        if($file == '.' || $file == '..'){
+                        
+                        }else{
                          $this->flashMessenger()->addMessage('no sql file found');
+                        }
                      }
                 }
             }else{
@@ -370,7 +372,7 @@ class SystemController extends AbstractActionController
         }else{
             $this->flashMessenger()->addMessage('Error creating model files');
         }
-        return $this->redirect()->toRoute('modules');
+        return $this->redirect()->toRoute('db-models');
         
     }
     
@@ -383,7 +385,7 @@ class SystemController extends AbstractActionController
         }else{
             $this->flashMessenger()->addMessage('Error creating form files');
         }
-        return $this->redirect()->toRoute('modules');
+        return $this->redirect()->toRoute('db-models');
     }
     
     private function getRoleResourceMap(){

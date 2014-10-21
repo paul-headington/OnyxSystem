@@ -38,11 +38,11 @@
 
 namespace OnyxSystem\Form;
 
-use ZfcBase\Form\ProvidesEventsForm;
+use Zend\Form\Form;
 use Zend\InputFilter\InputFilter;
 use Zend\Stdlib\Hydrator\ArraySerializable as ArraySerializable;
 
-class ModelForm extends ProvidesEventsForm
+class ModelForm extends Form
 {
     public function __construct()
     {
