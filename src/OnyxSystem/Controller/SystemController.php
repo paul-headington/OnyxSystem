@@ -107,7 +107,6 @@ class SystemController extends AbstractActionController
         
         $return = array();
         
-        $return["moduleName"] = $container->moduleName;
         $flashMessenger = $this->flashMessenger();
         if ($flashMessenger->hasMessages()) {
             $return['messages'] = $flashMessenger->getMessages();
