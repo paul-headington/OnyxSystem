@@ -103,7 +103,7 @@ class ModelGenerator {
         $generator = $this->loadBaseFromFile($formModelTemplate);        
         $class = $generator->getClass();        
         $class->setName($classname);
-        $class->setNamespaceName($modelName . '\Form');
+        $class->setNamespaceName($this->moduleName . '\Form');
         $constuct = $class->getMethod('__construct');
         $body = $constuct->getBody();
         $body = str_replace("{Model}", $modelName, $body);
@@ -125,7 +125,7 @@ class ModelGenerator {
         $generator = $this->loadBaseFromFile($fieldsetModelTemplate);        
         $class = $generator->getClass();   
         $class->setName($classname);
-        $class->setNamespaceName($modelName . '\Form');
+        $class->setNamespaceName($this->moduleName . '\Form');
         $class->addUse($this->moduleName . "\Model\\" . $modelName);
         $constuct = $class->getMethod('__construct');
         $body = $constuct->getBody();
@@ -302,7 +302,7 @@ class ModelGenerator {
             if($fieldname == 'password'){
                 $exchangebody .= '$this->setPassword((isset($data["password"])) ? $data["password"] : null);';
             }else{
-                $exchangebody .= '$this->' . $fieldname . PHP_TAB . PHP_TAB . '= (isset($data["'.$fieldname.'"])) ? $data["'.$fieldname.'"] : null;'.PHP_EOL;
+                $exchangebody .= '$this->' . $fieldname . PHP_TAB . PHP_TAB . '= (isset($data["'.$fieldname.'"])) ? $data["'.$fieldname.'"] : $this->' . $fieldname . ';'.PHP_EOL;
             }
             $saveBody .= PHP_TAB . '\'' . $fieldname . '\' => $'.strtolower($classname).'->' . $fieldname . ',' . PHP_EOL;
             
@@ -373,7 +373,17 @@ class ModelGenerator {
                     'longDescription'  => null,
                     'tags'             => array(),
                 )),
-            )),            
+            )), 
+            MethodGenerator::fromArray(array(
+                'name'       => 'getArrayCopy',
+                'parameters' => array(),
+                'body'       => 'return get_object_vars($this);'.PHP_EOL,
+                'docblock'   => DocBlockGenerator::fromArray(array(
+                    'shortDescription' => 'get all object vars for hydrator',
+                    'longDescription'  => null,
+                    'tags'             => array(),
+                )),
+            )), 
         );
         
         if($classname == 'User'){
