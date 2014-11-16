@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">System Tools - Rest API</h3>
@@ -25,7 +25,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-10">
         <div class="panel panel-default"> 
             <div class="panel-heading">
                 <h3 class="panel-title">Data Object Access</h3>
@@ -42,6 +42,8 @@
                           <th>Model Factory</th>
                           <th>Rest Access</th>
                           <th>Require Auth</th>
+                          <th>Get Only</th>
+                          <th>Post Only</th>
                           <th></th>
                         </tr>
                       </thead>
@@ -52,8 +54,10 @@
                           <td><input type="text" value="<?php echo $object['name']; ?>" name="name[<?php echo $object['tablename']; ?>]"/></td>    
                           <td><input type="text" value="<?php echo $object['factory']; ?>" name="factory[<?php echo $object['tablename']; ?>]"/></td>    
                           <td><input type="text" value="<?php echo $object['modelfactory']; ?>" name="modelfactory[<?php echo $object['tablename']; ?>]"/></td>    
-                          <td><label><input type="checkbox" <?php echo $object['checked']; ?> value="true" name="allow[<?php echo $object['tablename']; ?>]"/> Allow</label></td>
-                          <td><label><input type="checkbox" <?php echo $object['auth']; ?> value="true" name="auth[<?php echo $object['tablename']; ?>]"/> Allow</label></td>   
+                          <td><label><input type="checkbox" <?php echo $object['checked']; ?> value="true" name="allow[<?php echo $object['tablename']; ?>]"/></label></td>
+                          <td><label><input type="checkbox" <?php echo $object['auth']; ?> value="true" name="auth[<?php echo $object['tablename']; ?>]"/></label></td>   
+                          <td><label><input type="checkbox" <?php echo $object['get_only']; ?> value="true" name="get_only[<?php echo $object['tablename']; ?>]"/></label></td>
+                          <td><label><input type="checkbox" <?php echo $object['post_only']; ?> value="true" name="post_only[<?php echo $object['tablename']; ?>]"/></label></td>
                           <td><?php if($object['custom']){ ?><a href="/system/rest-delete/<?php echo $object['id']; ?>">delete</a><?php }?></td>
                         </tr>   
                         <?php }?>

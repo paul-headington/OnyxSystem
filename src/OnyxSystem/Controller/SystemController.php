@@ -186,6 +186,8 @@ class SystemController extends AbstractActionController
                 "modelfactory" => $modelFactoryDefault,
                 "checked" => '',
                 "auth" => '',
+                "get_only" => '',
+                "post_only" => '',
                 'custom' => false,
                 "id" => null,
             );            
@@ -198,12 +200,22 @@ class SystemController extends AbstractActionController
             if((bool)$row->auth){
                 $authChecked = 'checked';
             }
+            $getChecked = '';
+            if((bool)$row->get_only){
+                $getChecked = 'checked';
+            }
+            $postChecked = '';
+            if((bool)$row->post_only){
+                $postChecked = 'checked';
+            }
             if(array_key_exists($row->tablename, $tableNames)){
                 $tableNames[$row->tablename]['name'] = $row->name;
                 $tableNames[$row->tablename]['factory'] = $row->factory;
                 $tableNames[$row->tablename]['modelfactory'] = $row->modelfactory;
                 $tableNames[$row->tablename]['checked'] = 'checked';
-                $tableNames[$row->tablename]['auth'] = $authChecked;                
+                $tableNames[$row->tablename]['auth'] = $authChecked; 
+                $tableNames[$row->tablename]['get_only'] = $getChecked;
+                $tableNames[$row->tablename]['post_only'] = $postChecked;
             }else{
                 $tableNames[$row->tablename] = array(
                     "tablename" => $row->tablename,
@@ -212,6 +224,8 @@ class SystemController extends AbstractActionController
                     "modelfactory" => $row->modelfactory,
                     "checked" => 'checked',
                     "auth" => $authChecked,
+                    "get_only" => $getChecked,
+                    "post_only" => $postChecked,
                     "custom" => true,
                     "id" => $row->id,
                 ); 
@@ -230,12 +244,24 @@ class SystemController extends AbstractActionController
                 if(isset($data['auth'][$key])){
                     $authChecked = true;
                 }
+                
+                $getChecked = false;
+                if(isset($data['get_only'][$key])){
+                    $getChecked = true;
+                }
+                
+                $postChecked = false;
+                if(isset($data['post_only'][$key])){
+                    $postChecked = true;
+                }
                 $resource = new RestResource();
                 $resource->tablename = $key;
                 $resource->name = $data['name'][$key];
                 $resource->factory = $data['factory'][$key];
                 $resource->modelfactory = $data['modelfactory'][$key];
                 $resource->auth = $authChecked;
+                $resource->get_only = $getChecked;
+                $resource->post_only = $postChecked;
                 $RestResourceTable->save($resource);                
             }
             //cleanup
